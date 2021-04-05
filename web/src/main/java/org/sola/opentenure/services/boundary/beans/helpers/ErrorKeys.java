@@ -202,7 +202,12 @@ public class ErrorKeys {
      * claim status is appropriate
      */
     public static final String CLAIM_TRANSFER_NOT_ALLOWED = "CLAIM_TRANSFER_NOT_ALLOWED";
-    /**
+     /**
+     * Claim can't be renumbered. Make sure you have sufficient rights and claim
+     * status is appropriate and claim has initial number with prefix TEMP
+     */
+    public static final String CLAIM_RENUMBER_NOT_ALLOWED = "CLAIM_RENUMBER_NOT_ALLOWED";
+  /**
      * Management of mortgages is not allowed. Make sure you have sufficient
      * rights and claim status is appropriate
      */

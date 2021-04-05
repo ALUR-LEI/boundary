@@ -145,6 +145,8 @@ public class MessagesKeys {
     public static final String CLAIM_PAGE_CANCELLED = "CLAIM_PAGE_CANCELLED";
     /** Claim Certificate has been renewed */
     public static final String CLAIM_PAGE_RENEWED = "CLAIM_PAGE_RENEWED";
+    /** Claim has been renumbered */
+    public static final String CLAIM_PAGE_RENUMBERED = "CLAIM_PAGE_RENUMBERED";
     
     // Claim upload
     
