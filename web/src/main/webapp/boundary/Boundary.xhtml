@@ -116,7 +116,17 @@
                                                      maxlength="250"
                                                      autocomplete="off" />
                                     </div>
-                                </div>
+                                    <div class="col-md-4">
+                                        <label>
+                                            #{msg.BOUNDARIES_PAGE_AUTHORITY_CODE}
+                                        </label>
+                                        <h:inputText id="txtAuthorityCode" 
+                                                     value="#{boundaryPageBean.boundary.authorityCode}"  
+                                                     class="form-control"
+                                                     maxlength="8"
+                                                     autocomplete="off" />
+                                    </div>                                    
+                                </div>    
                             </div>
                         </div>
                     </div>

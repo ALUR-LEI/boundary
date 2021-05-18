@@ -7,6 +7,7 @@ public class AdministrativeBoundaryTO extends AbstractReadWriteTO {
     private String name;
     private String typeCode;
     private String authorityName;
+    private String authorityCode;
     private String parentId;
     private String recorderName;
     private String statusCode;
@@ -47,6 +48,14 @@ public class AdministrativeBoundaryTO extends AbstractReadWriteTO {
 
     public void setAuthorityName(String authorityName) {
         this.authorityName = authorityName;
+    }
+
+    public String getAuthorityCode() {
+        return authorityCode;
+    }
+
+    public void setAuthorityCode(String authorityCode) {
+        this.authorityCode = authorityCode;
     }
 
     public String getParentId() {

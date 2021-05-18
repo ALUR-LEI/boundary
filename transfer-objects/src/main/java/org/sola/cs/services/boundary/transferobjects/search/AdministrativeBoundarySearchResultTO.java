@@ -9,6 +9,7 @@ public class AdministrativeBoundarySearchResultTO extends AbstractTO {
     private String typeCode;
     private String typeName;
     private String authorityName;
+    private String authorityCode;
     private String parentId;
     private String statusCode;
     private String statusName;
@@ -57,6 +58,14 @@ public class AdministrativeBoundarySearchResultTO extends AbstractTO {
 
     public void setAuthorityName(String authorityName) {
         this.authorityName = authorityName;
+    }
+
+    public String getAuthorityCode() {
+        return authorityCode;
+    }
+
+    public void setAuthorityCode(String authorityCode) {
+        this.authorityCode = authorityCode;
     }
 
     public String getParentId() {
