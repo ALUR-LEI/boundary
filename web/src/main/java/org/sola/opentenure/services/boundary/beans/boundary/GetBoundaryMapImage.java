@@ -1,6 +1,6 @@
 package org.sola.opentenure.services.boundary.beans.boundary;
 
-import org.sola.opentenure.services.boundary.beans.boundary.*;
+//import org.sola.opentenure.services.boundary.beans.boundary.*;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -17,7 +17,7 @@ import javax.inject.Named;
 import org.sola.common.StringUtility;
 import org.sola.opentenure.services.boundary.beans.AbstractBackingBean;
 import javax.imageio.ImageIO;
-import org.sola.cs.services.ejbs.boundary.businesslogic.AdministrativeBoundaryMapImageEJBLocal;
+import org.sola.cs.services.ejbs.communityboundary.businesslogic.CommunityBoundaryMapImageEJBLocal;
 
 /**
  * Returns map image with claims
@@ -27,7 +27,7 @@ import org.sola.cs.services.ejbs.boundary.businesslogic.AdministrativeBoundaryMa
 public class GetBoundaryMapImage extends AbstractBackingBean {
 
     @EJB
-    AdministrativeBoundaryMapImageEJBLocal mapEjb;
+    CommunityBoundaryMapImageEJBLocal mapEjb;
 
     public void getBoundaryMapImage() throws IOException {
         BufferedImage mapImage = null;
