@@ -957,7 +957,8 @@ OT.Map = function (mapOptions) {
     }
 
     // Claim information tool
-    var getObjectUrl = applicationUrl + "/ws/" + this.languageCode + "/claim/getobjectbypoint";
+//    var getObjectUrl = applicationUrl + "/ws/" + this.languageCode + "/claim/getobjectbypoint";
+    var getObjectUrl = ((applicationUrl.replace('http://', '//')).replace('https://', '//')) + "/ws/" + this.languageCode + "/claim/getobjectbypoint";
     var viewClaimUrl = applicationUrl + "/claim/ViewClaim.xhtml";
     var viewBoundaryUrl = applicationUrl + "/boundary/ViewBoundary.xhtml";
     var viewSpatialUnitUrl = applicationUrl + "/spatialUnit/ViewSpatialUnit.xhtml";

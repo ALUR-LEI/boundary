@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"   
+<html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:uc="http://xmlns.jcp.org/jsf/composite/uc"
@@ -22,6 +22,10 @@
                         var wnd = window.open("#{request.contextPath}/claim/ClaimCertificatePrint.xhtml?id=#{claimPageBean.id}", "_blank", "width=900,height=600,menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes");
                                 return false;
                             }
+                    function printClaimLease() {
+                        var wnd = window.open("#{request.contextPath}/claim/ClaimLeasePrint.xhtml?id=#{claimPageBean.id}", "_blank", "width=900,height=600,menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes");
+                                return false;
+                            }
                 </script>
             </ui:define>
             <ui:define name="content">
@@ -38,10 +42,10 @@
                                          onclick="return confirm('#{msg.CLAIM_PAGE_ASSIGN_WARNING}') ? blockUI() : false" />
                         <h:commandButton class="btn btn-default" value="#{msg.GENERAL_LABEL_UNASSIGN}"
                                          rendered="#{claimPageBean.canUnAssign}"
-                                         action="#{claimPageBean.unAssignClaim()}" 
+                                         action="#{claimPageBean.unAssignClaim()}"
                                          onclick="return confirm('#{msg.CLAIM_PAGE_UNASSIGN_WARNING}') ? blockUI() : false" />
-                        <h:outputLink value="#{request.contextPath}/claim/Claim.xhtml?id=#{claimPageBean.id}" 
-                                      class="btn btn-default" 
+                        <h:outputLink value="#{request.contextPath}/claim/Claim.xhtml?id=#{claimPageBean.id}"
+                                      class="btn btn-default"
                                       onclick="blockUI()"
                                       rendered="#{claimPageBean.canEdit}">
                             #{msg.GENERAL_LABEL_EDIT}
@@ -50,8 +54,8 @@
                                          rendered="#{claimPageBean.canSubmit}"
                                          action="#{claimPageBean.submitClaim()}"
                                          onclick="return confirm('#{msg.CLAIM_PAGE_SUBMIT_WARNING}') ? blockUI() : false" />
-                        <h:outputLink value="#{request.contextPath}/claim/Claim.xhtml?challengedId=#{claimPageBean.id}" 
-                                      class="btn btn-default" 
+                        <h:outputLink value="#{request.contextPath}/claim/Claim.xhtml?challengedId=#{claimPageBean.id}"
+                                      class="btn btn-default"
                                       onclick="blockUI()"
                                       rendered="#{claimPageBean.canChallenge}">
                             #{msg.GENERAL_LABEL_CHALLENGE}
@@ -73,41 +77,46 @@
                                          action="#{claimPageBean.withdrawClaim()}"
                                          onclick="return confirm('#{msg.CLAIM_PAGE_WITHDRAW_WARNING}') ? blockUI() : false" />
                         <h:button class="btn btn-default" onclick="$('#rejectDialog').modal('show');
-                                return false;" 
+                                return false;"
                                   value="#{msg.GENERAL_LABEL_REJECT}" rendered="#{claimPageBean.canReject}" />
                         <h:commandButton class="btn btn-default" value="#{msg.GENERAL_LABEL_DELETE}"
                                          rendered="#{claimPageBean.canDelete}"
                                          onclick="return confirm('#{msg.CLAIM_PAGE_DELETE_WARNING}') ? blockUI() : false"
                                          action="#{claimPageBean.deleteClaim()}" />
-                        <h:outputLink value="" class="btn btn-default" 
+                        <h:outputLink value="" class="btn btn-default"
                                       onclick="return printClaim()">
                             #{msg.GENERAL_LABEL_PRINT}
                         </h:outputLink>
-                        <h:outputLink value="" class="btn btn-default" 
+                        <h:outputLink value="" class="btn btn-default"
                                       rendered="#{claimPageBean.canPrintCertificate}"
                                       onclick="return printClaimCert()">
                             #{msg.GENERAL_LABEL_PRINT_CERT}
+                        </h:outputLink>
+                        <h:outputLink value="" class="btn btn-default"
+                                      rendered="#{claimPageBean.canPrintLease}"
+                                      onclick="return printClaimLease()">
+                            #{msg.GENERAL_LABEL_PRINT_LEASE}
                         </h:outputLink>
                         <h:commandButton class="btn btn-default" value="#{msg.GENERAL_LABEL_ISSUE}"
                                          rendered="#{claimPageBean.canIssueCertificate}"
                                          action="#{claimPageBean.issueCertificate()}"
                                          onclick="return confirm('#{msg.CLAIM_PAGE_ISSUE_WARNING}') ? blockUI() : false" />
-                                            
+
                         <h:commandButton class="btn btn-default" value="#{msg.GENERAL_LABEL_CANCEL_CERT}"
                                          rendered="#{claimPageBean.canTransfer}"
-                                         action="#{claimPageBean.cancelCertificate()}" 
+                                         action="#{claimPageBean.cancelCertificate()}"
                                          onclick="return confirm('#{msg.CLAIM_PAGE_CANCEL_WARNING}') ? blockUI() : false" />
 
-                        <h:outputLink value="#{request.contextPath}/claim/TransferClaim.xhtml?id=#{claimPageBean.id}" 
-                                      class="btn btn-default" 
+                        <h:outputLink value="#{request.contextPath}/claim/TransferClaim.xhtml?id=#{claimPageBean.id}"
+                                      class="btn btn-default"
                                       onclick="blockUI()"
                                       rendered="#{claimPageBean.canTransfer}">
                             <f:param name="action" value="transfer" />
                             #{msg.GENERAL_LABEL_TRANSFER}
                         </h:outputLink>
 
-                        <h:outputLink value="#{request.contextPath}/claim/Mortgage.xhtml?id=#{claimPageBean.id}" 
-                                      class="btn btn-default" 
+                        <h:outputLink value="#{request.contextPath}/claim/Mortgage.xhtml?id=#{claimPageBean.id}"
+                                      class="btn btn-default"
                                       onclick="blockUI()"
                                       rendered="#{claimPageBean.canTransfer}">
                             <f:param name="action" value="restriction" />
@@ -128,6 +137,9 @@
                             <ui:fragment rendered="#{claimPageBean.canPrintCertificate}">
                                 <li><a href="#restrictions" data-toggle="tab">#{msg.GENERAL_LABEL_RESTRICTIONS}</a></li>
                             </ui:fragment>
+                            <ui:fragment rendered="#{claimPageBean.canPrintLease}">
+                                <li><a href="#restrictions" data-toggle="tab">#{msg.GENERAL_LABEL_RESTRICTIONS}</a></li>
+                            </ui:fragment>
                             <li><a href="#additional" data-toggle="tab">#{msg.CLAIM_PAGE_ADJACENCIES}</a></li>
                             <li><a href="#comments" data-toggle="tab">#{msg.CLAIM_PAGE_COMMENTS}</a></li>
                             <ui:include src="/controls/DynaFormHeaders.xhtml"></ui:include>
@@ -142,7 +154,7 @@
                                 <uc:MapClaims instantMapRender="true" mapHeight="500" claim="#{claimPageBean.claim}"></uc:MapClaims>
                             </div>
                         </div>
-                        
+
                         <div class="tab-pane" id="general">
                             <div style="padding: 15px 0px;width:700px;">
                                 <div class="row">
@@ -257,7 +269,7 @@
                                         <br />
                                         #{dateBean.formatDate(claimPageBean.claim.issuanceDate)}
                                     </div>
-                                    
+
                                     <div class="col-md-4">
                                         <label>
                                             #{msg.CLAIM_PAGE_CHALLENGED_CLAIM}
@@ -277,7 +289,7 @@
                                         <c:if test="#{not empty claimPageBean.challengingClaims}">
                                             <ui:repeat value="#{claimPageBean.challengingClaims}" var="c" varStatus="status">
                                                 <c:if test="#{status.index gt 0}">
-                                                    , 
+                                                    ,
                                                 </c:if>
                                                 <a href="#{request.contextPath}/claim/ViewClaim.xhtml?id=#{c.id}">
                                                     ##{c.nr}
@@ -298,9 +310,9 @@
                                         <h:outputText value="#{claimPageBean.statusName}" escape="false" />
                                     </div>
                                 </div>
-                                
+
                                 <div class="splitter"></div>
-                                
+
                                 <h:panelGroup layout="block" class="row" rendered="#{not empty claimPageBean.claim.rejectionReasonCode}">
                                     <div class="col-md-12">
                                         <label>
@@ -322,12 +334,12 @@
                                             <br />
                                             <ui:repeat var="c" value="#{claimPageBean.parentClaims}" varStatus="s">
                                                 <ui:fragment rendered="#{s.index gt 0}">
-                                                    , 
+                                                    ,
                                                 </ui:fragment>
                                                 <a href="#{request.contextPath}/claim/ViewClaim.xhtml?id=#{c.id}">#{c.nr}</a>
                                             </ui:repeat>
                                         </div>
-                                        
+
                                         <div class="col-md-6">
                                             <label>
                                                 #{msg.CLAIM_PAGE_CHILDREN_CLAIMS}
@@ -455,12 +467,12 @@
                                     </label>
                                     <br />
                                     <h:selectOneListbox
-                                        id="cbxRejectionReason" 
+                                        id="cbxRejectionReason"
                                         size="1"
                                         value="#{claimPageBean.rejectionReasonCode}"
                                         class="form-control">
                                         <f:selectItems value="#{claimPageBean.rejectionReasons}" var="r"
-                                                       itemLabel="#{r.displayValue}" 
+                                                       itemLabel="#{r.displayValue}"
                                                        itemValue="#{r.code}" />
                                     </h:selectOneListbox>
                                 </div>
@@ -482,4 +494,3 @@
         </ui:composition>
     </h:body>
 </html>
-

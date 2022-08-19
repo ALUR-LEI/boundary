@@ -609,6 +609,10 @@ public class ClaimPageBean extends AbstractBackingBean {
         return getClaimPermissions().isCanPrintCertificate();
     }
 
+    public boolean getCanPrintLease() {
+        return getClaimPermissions().isCanPrintLease();
+    }
+
     public boolean getCanDelete() {
         return getClaimPermissions().isCanDelete();
     }

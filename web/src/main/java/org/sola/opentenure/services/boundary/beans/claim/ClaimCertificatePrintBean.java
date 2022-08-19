@@ -1,6 +1,7 @@
 package org.sola.opentenure.services.boundary.beans.claim;
 
 import java.net.URLEncoder;
+import java.util.Calendar;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -25,10 +26,10 @@ public class ClaimCertificatePrintBean extends AbstractBackingBean {
 
     @EJB
     SystemCSEJBLocal systemEjb;
-    
+
     @Inject
     ReportServerBean server;
-
+    
     public void printCertificate() {
         try {
             String id = getRequestParam("id");

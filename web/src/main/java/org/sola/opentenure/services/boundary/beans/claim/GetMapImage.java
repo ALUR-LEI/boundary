@@ -70,9 +70,9 @@ public class GetMapImage extends AbstractBackingBean {
                 case parcel:
                     mapImage = mapEjb.getMapImage(id, width, height, drawScale, scaleLabel);
                     break;
-                case boundary:
-                    mapImage = mapEjb.getBoundaryMapImage(id, width, height, drawScale, scaleLabel);
-                    break;
+//                case boundary:
+//                    mapImage = mapEjb.getBoundaryMapImage(id, width, height, drawScale, scaleLabel);
+//                    break;
             }
             
             if (mapImage == null) {
