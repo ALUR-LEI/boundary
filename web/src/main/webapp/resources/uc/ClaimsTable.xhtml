@@ -22,16 +22,22 @@
                     #{s.description}
             </h:column>
             <h:column>
-                <f:facet name="header">#{msg.CLAIM_SEARCH_LODGING_DATE}</f:facet>
-                    #{dateBean.formatDate(s.lodgementDate)}
+                <f:facet name="header">#{msg.CLAIM_PAGE_DECISION_DATE}</f:facet>
+                    #{dateBean.getShortDate(s.decisionDate)}
             </h:column>
             <h:column>
-                <f:facet name="header">#{msg.CLAIM_SEARCH_CLAIMANT_NAME}</f:facet>
+                <f:facet name="header">#{msg.CLAIM_PAGE_OWNERS}</f:facet>
                     #{s.claimantName}
             </h:column>
             <h:column>
-                <f:facet name="header">#{msg.CLAIM_SEARCH_CHALLENGE_EXPIRATION}</f:facet>
-                    #{dateBean.formatDate(s.challengeExpiryDate)}
+                <f:facet name="header">#{msg.REGISTRATIONPAGE_COMMUNITY_NAME}</f:facet>
+                    #{s.boundaryName}
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{msg.CLAIM_SEARCH_AREA_HA}</f:facet>
+                <h:outputText value = "#{s.claimArea/10000}" >
+                    <f:convertNumber maxFractionDigits="2" groupingUsed="true" />
+                </h:outputText>
             </h:column>
             <h:column>
                 <f:facet name="header">#{msg.GENERAL_LABEL_STATUS}</f:facet>

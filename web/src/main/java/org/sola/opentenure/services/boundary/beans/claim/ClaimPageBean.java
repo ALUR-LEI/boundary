@@ -437,7 +437,7 @@ public class ClaimPageBean extends AbstractBackingBean {
         }
         return "";
     }
-
+    
     public String getDocTypeName(String code) {
         return refData.getBeanDisplayValue(refData.getDocumentTypes(langBean.getLocale(), false), code);
     }

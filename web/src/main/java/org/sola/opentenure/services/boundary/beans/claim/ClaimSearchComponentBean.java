@@ -5,7 +5,10 @@ import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.hsqldb.lib.StringUtil;
 import org.sola.common.DateUtility;
+import org.sola.common.RolesConstants;
+import org.sola.common.StringUtility;
 import org.sola.opentenure.services.boundary.beans.AbstractBackingBean;
 import org.sola.opentenure.services.boundary.beans.helpers.DateBean;
 import org.sola.opentenure.services.boundary.beans.language.LanguageBean;
@@ -14,6 +17,9 @@ import org.sola.cs.services.ejbs.claim.entities.ClaimStatus;
 import org.sola.cs.services.ejb.search.businesslogic.SearchCSEJBLocal;
 import org.sola.cs.services.ejb.search.repository.entities.ClaimSearchParams;
 import org.sola.cs.services.ejb.search.repository.entities.ClaimSearchResult;
+import org.sola.cs.services.ejbs.admin.businesslogic.AdminCSEJBLocal;
+import org.sola.cs.services.ejbs.admin.businesslogic.repository.entities.User;
+import org.sola.opentenure.services.boundary.beans.security.ActiveUserBean;
 
 /**
  * Provides method and listeners for claim search component
@@ -25,6 +31,9 @@ public class ClaimSearchComponentBean extends AbstractBackingBean {
     @EJB
     SearchCSEJBLocal searchEjb;
 
+    @Inject
+    ActiveUserBean user;
+    
     @Inject
     DateBean dateBean;
     
@@ -85,6 +94,10 @@ public class ClaimSearchComponentBean extends AbstractBackingBean {
         if(!isPostback() && searchByUser){
             search(searchByUser);
         }
+    }
+    
+    public boolean isShowStatus() {
+        return !(isInRole(RolesConstants.INVESTOR) || !StringUtility.empty(user.getUserBoundaryId()).equals(""));
     }
     
     public void search(boolean onlyUserClaims) {

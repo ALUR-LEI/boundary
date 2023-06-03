@@ -157,7 +157,7 @@
                     <div class="splitter"></div>
 
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-8">
                             <label>
                                 #{msg.CLAIM_PAGE_CLAIMANT_ADDRESS}
                             </label>
@@ -166,6 +166,21 @@
                                          class="form-control"
                                          maxlength="255"
                                          autocomplete="off" />
+                        </div>
+                        <div class="col-md-4">
+                            <h:outputLabel for="cbxBoundary">
+                                #{msg.REGISTRATIONPAGE_COMMUNITY_NAME}
+                            </h:outputLabel>
+                            <br />
+                            <h:selectOneListbox
+                                id="cbxBoundary" 
+                                size="1"
+                                value="#{claimPageBean.party.adminBoundaryId}"
+                                class="form-control">
+                                <f:selectItems value='#{boundaryPageBean.getBoundaries("interest", "", true)}' var="b"
+                                               itemLabel="#{b.name}" 
+                                               itemValue="#{b.id}" />
+                            </h:selectOneListbox>
                         </div>
                     </div>
                     <h:inputHidden id="hPartyId" />

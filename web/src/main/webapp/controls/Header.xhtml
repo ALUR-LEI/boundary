@@ -6,12 +6,13 @@
     <body>
         <ui:composition>
             <div id="PageHeader">
-                <div id="PageHeaderLogo">
+                <div style="float: left;">
                     <h:graphicImage name="images/logo_en_AU.png" library="default" class="MainLogo" id="MainLogo" />
                 </div>
-                <div id="PageHeaderCaption">
+                <br />
+                <span id="PageHeaderCaption">
                     #{msg.GENERAL_HEADER_CAPTION} <span style="font-size: 10px;font-weight: bold;">v#{msg.GENERAL_VERSION}</span>
-                </div>
+                </span>
                 <div id="PageHeaderLogin">
                     <span id="languageBarWrapper">
                         <ui:include src="/controls/LanguageBar.xhtml"></ui:include>

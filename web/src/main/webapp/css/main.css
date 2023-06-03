@@ -5,47 +5,72 @@ Green #87a968
 LightGreen #e6eddf
 Earth #754c29
 */
+.icon-bar {
+    background-color: #217c95 !important;
+    width: 18px !important;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: #217c95 !important;
+    background-color: #dff5ff !important;
+    float: left !important;
+    margin-left: 15px !important;
+}
 
 body{
     background-color: #e6eddf;
 }
 
-#PageHeader, #PageHeaderCaption, #PageHeaderLogo, #PageHeaderLogin {
-    height: 76px;
+.row.no-gutter, .row.small-gutter {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.row.no-gutter [class*='col-']:not(:first-child),
+.row.no-gutter [class*='col-']:not(:last-child) {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.row.small-gutter [class*='col-']:not(:first-child),
+.row.small-gutter [class*='col-']:not(:last-child) {
+    padding-right: 4px;
+    padding-left: 4px;
+}
+
+#PageHeader {
     background-color: #217c95;
+    min-height: 76px;
     font-family: Arial, sans-serif;
-    line-height: 60px;
     color: #fff;
+    display: inline-block;
+    width: 100%;
     vertical-align: middle;
 }
 
-#PageHeader{
-    font: large arial;
-}
-
 #PageHeaderCaption{
-    float: left;
     font-size: large;
 }
 
 #PageHeaderLogo{
-    float: left; 
-    text-align: center; 
-    padding: 0px 22px 0px 28px;
+    float: left;
+    text-align: center;
+    padding: 7px 22px 0px 28px;
 }
 
 #PageHeaderLogin{
-    float: right; 
+    float: right;
     padding-right: 10px;
+    padding-top: 5px;
     text-align: right;
     font-size: small;
 }
 
 .MainLogo{
-    width: 67px;
-    height: 65px;
+    width: 65px;
+    height: auto;
     vertical-align: top;
-    margin-top: 3px;
+    margin: 7px 22px 0px 28px;
 }
 
 #LoginBox{
@@ -63,7 +88,8 @@ body{
     background-color:#ddcc00;
     color:#fff;
     font-size:14px;
-    padding:5px;-moz-border-radius: 3px;
+    padding:5px;
+    -moz-border-radius: 3px;
     border-radius: 3px;
     -webkit-border-radius: 3px;
 }
@@ -89,8 +115,8 @@ body{
 }
 
 .splitter{
-    height: 10px; 
-    margin-bottom: 10px; 
+    height: 10px;
+    margin-bottom: 10px;
     border-bottom: #ccc 2px dotted;
 }
 
@@ -124,21 +150,19 @@ body{
 }
 
 .ShareHeader{
-    color:white; 
+    color:white;
     margin:7px 0px;
     background-color: #87A968;
     font-weight: bold;
 }
 
 .ShareHeaderCaption{
-    width:300px;
-    float:left; 
+    float:left;
     font-size:20px;
     padding-left:7px;
 }
 
 .ShareHeaderControls{
-    width:400px;
     float:right;
     text-align:right;
     line-height:30px;
@@ -162,8 +186,7 @@ body{
 }
 
 .OwnerHeaderCaption{
-    width:500px;
-    float:left; 
+    float:left;
     font-size:18px;
     padding-left:7px;
 }
@@ -185,7 +208,6 @@ body{
 }
 
 .OwnerHeaderControls{
-    width:200px;
     float:right;
     text-align:right;
     line-height:28px;
@@ -236,6 +258,10 @@ ul{
         TABLES
 -----------------------------------*/
 .table-header{
+    position: -webkit-sticky; /* for safari */
+    position: sticky;
+    z-index: 9999;
+    top: 0px;
     background-color:#87a968;
     height:38px;
     color:#fff;
@@ -273,9 +299,13 @@ div.tooltip-inner {
     max-width: 400px;
 }
 
-img .olTileImage{max-width:none;}
+img .olTileImage{
+    max-width:none;
+}
 
-.olImageLoadError{display: none !important;}
+.olImageLoadError{
+    display: none !important;
+}
 
 .nav > li > a {
     padding: 8px 15px !important;
@@ -299,9 +329,6 @@ img .olTileImage{max-width:none;}
 .nav-tabs > li > a {
     background-color: #fff !important;
     margin-right: 0px !important;
-    border: 0px solid transparent !important;
-    border-radius: 0px 0px 0px 0px !important;
-    border-right: 4px solid #eee !important;
 }
 .selectedMenuItem{
     border-bottom: #87a968 solid 4px;
@@ -309,4 +336,34 @@ img .olTileImage{max-width:none;}
 
 .selectedMenuLink{
     padding-bottom:11px !important;
+}
+
+@media (max-width: 700px) {
+    .tableWrapper {
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 440px) {
+    .MainLogo {
+        margin: 7px 15px 0px 15px;
+    }
+    #PageHeaderCaption {
+        font-size: 16px;
+    }
+    .PageName {
+        font-size: 24px;
+    }
+    .ShareHeaderCaption {
+        font-size: 18px;
+    }
+    .OwnerHeaderCaption{
+        font-size:16px;
+    }
+    .contentContainer {
+        padding: 1px 5px 5px 5px;
+    }
+    .content {
+        padding: 10px 7px;
+    }
 }

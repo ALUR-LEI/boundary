@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <body>
         <ui:composition>
             <h:commandLink class="BlueLink" rendered="#{allowEdit}">
@@ -156,6 +157,13 @@
 
                                 <div class="row">
                                     <div class="col-md-3">
+                                        <h:outputLabel>
+                                            #{msg.REGISTRATIONPAGE_COMMUNITY_NAME}
+                                        </h:outputLabel>
+                                        <br />
+                                        #{boundaryPageBean.getBoundaryName(o.adminBoundaryId)}
+                                    </div>
+                                    <div class="col-md-3">
                                         <label>
                                             #{msg.CLAIM_PAGE_CLAIMANT_PHONE_NUMBER}
                                         </label>
@@ -181,13 +189,6 @@
                                     </div>
                                     <div class="col-md-3">
                                         <label>
-                                            #{msg.CLAIM_PAGE_CLAIMANT_ADDRESS}
-                                        </label>
-                                        <br />
-                                        #{o.address} 
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label>
                                             #{msg.CLAIM_PAGE_CLAIMANT_EMAIL}
                                         </label>
                                         <br />
@@ -200,114 +201,182 @@
                                     </div>
                                 </div>
 
+                                <div class="splitter"></div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>
+                                            #{msg.CLAIM_PAGE_CLAIMANT_ADDRESS}
+                                        </label>
+                                        <br />
+                                        #{o.address} 
+                                    </div>
+                                </div>
+                                
                                 <div class="splitter"></div>
                             </h:panelGroup>
                             <h:panelGroup rendered="#{not o.person}" layout="block">
-                                <div class="OwnerHeader">
-                                    <div class="OwnerHeaderCaption">
-                                        #{o.name} #{o.lastName}
+                                
+                                <c:if test="#{activeUserBean.investor or activeUserBean.firstNation}">
+                                    
+                                    <div class="OwnerHeader">
+                                        <div class="OwnerHeaderCaption">
+                                            #{o.name} #{o.lastName}
+                                        </div>
+                                        <div class="clearfix"></div>
                                     </div>
-                                    <div class="OwnerHeaderControls">
-                                        <h:commandLink class="BlueLink" title="#{msg.GENERAL_LABEL_EDIT}" rendered="#{allowEdit and claimPageBean.isShareActive(s)}">
-                                            <f:ajax event="click" 
-                                                    render= ":mainForm:pnlParty"
-                                                    onevent="onOpenEditOwner"
-                                                    onerror="onOpenEditOwnerError"
-                                                    listener="#{claimPageBean.loadOwner(s.id, o.id)}" />
-                                            <i class="glyphicon glyphicon-pencil"></i>
-                                        </h:commandLink>
-                                        &nbsp;
-                                        <h:commandLink class="BlueLink" 
-                                                       title="#{msg.GENERAL_LABEL_DELETE}" 
-                                                       onclick="return confirm('#{msg.CLAIM_PAGE_DELETE_OWNER_WARNING}')"
-                                                       rendered="#{allowEdit and claimPageBean.isShareActive(s)}">
-                                            <f:ajax event="click" 
-                                                    render= ":mainForm:divShares"
-                                                    onevent="onDeleteOwner"
-                                                    onerror="handleAjaxError"
-                                                    listener="#{claimPageBean.deleteOwner(s.id, o.id)}" />
-                                            <i class="glyphicon glyphicon-remove"></i>
-                                        </h:commandLink>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_ESTABLISHMENT_DATE}
+                                            </label>
+                                            <br />
+                                            #{dateBean.getShortDate(o.birthDate)}
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_REGISTRATION_NUMBER}
+                                            </label>
+                                            <br />
+                                            #{o.idNumber}
+                                        </div>
                                     </div>
-                                    <div class="clearfix"></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_ESTABLISHMENT_DATE}
-                                        </label>
-                                        <br />
-                                        #{dateBean.getShortDate(o.birthDate)}
+                                    
+                                    <div class="splitter"></div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h:outputLabel>
+                                                #{msg.REGISTRATIONPAGE_COMMUNITY_NAME}
+                                            </h:outputLabel>
+                                            <br />
+                                            #{boundaryPageBean.getBoundaryName(o.adminBoundaryId)}
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_CLAIMANT_ADDRESS}
+                                            </label>
+                                            <br />
+                                            #{o.address} 
+                                        </div>
                                     </div>
 
-                                    <div class="col-md-3">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_CLAIMANT_ID_TYPE}
-                                        </label>
-                                        <br />
-                                        #{claimPageBean.getIdTypeName(o.idTypeCode)} 
+                                    <div class="splitter"></div>
+                                    
+                                </c:if>
+                                <c:if test="#{!activeUserBean.investor and !activeUserBean.firstNation}">
+                                    
+                                    <div class="OwnerHeader">
+                                        <div class="OwnerHeaderCaption">
+                                            #{o.name} #{o.lastName}
+                                        </div>
+                                        <div class="OwnerHeaderControls">
+                                            <h:commandLink class="BlueLink" title="#{msg.GENERAL_LABEL_EDIT}" rendered="#{allowEdit and claimPageBean.isShareActive(s)}">
+                                                <f:ajax event="click" 
+                                                        render= ":mainForm:pnlParty"
+                                                        onevent="onOpenEditOwner"
+                                                        onerror="onOpenEditOwnerError"
+                                                        listener="#{claimPageBean.loadOwner(s.id, o.id)}" />
+                                                <i class="glyphicon glyphicon-pencil"></i>
+                                            </h:commandLink>
+                                            &nbsp;
+                                            <h:commandLink class="BlueLink" 
+                                                           title="#{msg.GENERAL_LABEL_DELETE}" 
+                                                           onclick="return confirm('#{msg.CLAIM_PAGE_DELETE_OWNER_WARNING}')"
+                                                           rendered="#{allowEdit and claimPageBean.isShareActive(s)}">
+                                                <f:ajax event="click" 
+                                                        render= ":mainForm:divShares"
+                                                        onevent="onDeleteOwner"
+                                                        onerror="handleAjaxError"
+                                                        listener="#{claimPageBean.deleteOwner(s.id, o.id)}" />
+                                                <i class="glyphicon glyphicon-remove"></i>
+                                            </h:commandLink>
+                                        </div>
+                                        <div class="clearfix"></div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_REGISTRATION_NUMBER}
-                                        </label>
-                                        <br />
-                                        #{o.idNumber}
-                                    </div>
-                                    <div class="col-md-3">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_ESTABLISHMENT_DATE}
+                                            </label>
+                                            <br />
+                                            #{dateBean.getShortDate(o.birthDate)}
+                                        </div>
 
+                                        <div class="col-md-3">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_CLAIMANT_ID_TYPE}
+                                            </label>
+                                            <br />
+                                            #{claimPageBean.getIdTypeName(o.idTypeCode)} 
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_REGISTRATION_NUMBER}
+                                            </label>
+                                            <br />
+                                            #{o.idNumber}
+                                        </div>
+                                        <div class="col-md-3">
+                                            <h:outputLabel>
+                                                #{msg.REGISTRATIONPAGE_COMMUNITY_NAME}
+                                            </h:outputLabel>
+                                            <br />
+                                            #{boundaryPageBean.getBoundaryName(o.adminBoundaryId)}
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="splitter"></div>
+                                    <div class="splitter"></div>
 
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_CLAIMANT_PHONE_NUMBER}
-                                        </label>
-                                        <br />
-                                        <h:panelGroup rendered="#{claimPageBean.canViewFullInfo}">
-                                            #{o.phone} 
-                                        </h:panelGroup>
-                                        <h:panelGroup rendered="#{not claimPageBean.canViewFullInfo}">
-                                            <i>#{msg.CLAIM_PAGE_HIDDEN}</i>
-                                        </h:panelGroup>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_CLAIMANT_PHONE_NUMBER}
+                                            </label>
+                                            <br />
+                                            <h:panelGroup rendered="#{claimPageBean.canViewFullInfo}">
+                                                #{o.phone} 
+                                            </h:panelGroup>
+                                            <h:panelGroup rendered="#{not claimPageBean.canViewFullInfo}">
+                                                <i>#{msg.CLAIM_PAGE_HIDDEN}</i>
+                                            </h:panelGroup>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_CLAIMANT_MOBILE_PHONE_NUMBER}
+                                            </label>
+                                            <br />
+                                            <h:panelGroup rendered="#{claimPageBean.canViewFullInfo}">
+                                                #{o.mobilePhone}
+                                            </h:panelGroup>
+                                            <h:panelGroup rendered="#{not claimPageBean.canViewFullInfo}">
+                                                <i>#{msg.CLAIM_PAGE_HIDDEN}</i>
+                                            </h:panelGroup>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_CLAIMANT_ADDRESS}
+                                            </label>
+                                            <br />
+                                            #{o.address} 
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_CLAIMANT_EMAIL}
+                                            </label>
+                                            <br />
+                                            <h:panelGroup rendered="#{claimPageBean.canViewFullInfo}">
+                                                #{o.email}
+                                            </h:panelGroup>
+                                            <h:panelGroup rendered="#{not claimPageBean.canViewFullInfo}">
+                                                <i>#{msg.CLAIM_PAGE_HIDDEN}</i>
+                                            </h:panelGroup>
+                                        </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_CLAIMANT_MOBILE_PHONE_NUMBER}
-                                        </label>
-                                        <br />
-                                        <h:panelGroup rendered="#{claimPageBean.canViewFullInfo}">
-                                            #{o.mobilePhone}
-                                        </h:panelGroup>
-                                        <h:panelGroup rendered="#{not claimPageBean.canViewFullInfo}">
-                                            <i>#{msg.CLAIM_PAGE_HIDDEN}</i>
-                                        </h:panelGroup>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_CLAIMANT_ADDRESS}
-                                        </label>
-                                        <br />
-                                        #{o.address} 
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_CLAIMANT_EMAIL}
-                                        </label>
-                                        <br />
-                                        <h:panelGroup rendered="#{claimPageBean.canViewFullInfo}">
-                                            #{o.email}
-                                        </h:panelGroup>
-                                        <h:panelGroup rendered="#{not claimPageBean.canViewFullInfo}">
-                                            <i>#{msg.CLAIM_PAGE_HIDDEN}</i>
-                                        </h:panelGroup>
-                                    </div>
-                                </div>
 
-                                <div class="splitter"></div>
+                                    <div class="splitter"></div>
+                                </c:if>
                             </h:panelGroup>
                         </ui:repeat>
                     </h:panelGroup>

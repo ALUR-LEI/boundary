@@ -6,6 +6,7 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:uc="http://xmlns.jcp.org/jsf/composite/uc"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:fn="http://java.sun.com/jsf/core"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:body>
         <ui:composition template="../templates/MapTemplate.xhtml">
@@ -15,15 +16,16 @@
             <ui:define name="head2">
                 <script>
                     function printClaim() {
-                        var wnd = window.open("#{request.contextPath}/claim/ClaimPrint.xhtml?id=#{claimPageBean.id}", "_blank", "width=900,height=600,menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes");
+                        var wnd = window.open("#{request.contextPath}/claim/ClaimPrint.xhtml?id=#{claimPageBean.id}", "Print", 
+                        "width=900,height=600,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=no,titlebar=no,menubar=no,status=no,replace=true");
                                 return false;
                             }
                     function printClaimCert() {
-                        var wnd = window.open("#{request.contextPath}/claim/ClaimCertificatePrint.xhtml?id=#{claimPageBean.id}", "_blank", "width=900,height=600,menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes");
+                        var wnd = window.open("#{request.contextPath}/claim/ClaimCertificatePrint.xhtml?id=#{claimPageBean.id}", "Print", "width=900,height=600,menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes");
                                 return false;
                             }
                     function printClaimLease() {
-                        var wnd = window.open("#{request.contextPath}/claim/ClaimLeasePrint.xhtml?id=#{claimPageBean.id}", "_blank", "width=900,height=600,menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes");
+                        var wnd = window.open("#{request.contextPath}/claim/ClaimLeasePrint.xhtml?id=#{claimPageBean.id}", "Print", "width=900,height=600,menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes");
                                 return false;
                             }
                 </script>
@@ -132,16 +134,18 @@
                             <li class="active"><a href="#mapTab" data-toggle="tab">#{msg.CLAIM_PAGE_MAP}</a></li>
                             <li><a href="#general" data-toggle="tab">#{msg.CLAIM_PAGE_CLAIM}</a></li>
                             <li><a href="#claimant" data-toggle="tab">#{msg.CLAIM_PAGE_CLAIMANT}</a></li>
-                            <li><a href="#attachments" data-toggle="tab">#{msg.CLAIM_PAGE_DOCUMENTS}</a></li>
                             <li><a href="#owners" data-toggle="tab">#{msg.CLAIM_PAGE_OWNERS}</a></li>
+                            <li><a href="#attachments" data-toggle="tab">#{msg.CLAIM_PAGE_DOCUMENTS}</a></li>
                             <ui:fragment rendered="#{claimPageBean.canPrintCertificate}">
                                 <li><a href="#restrictions" data-toggle="tab">#{msg.GENERAL_LABEL_RESTRICTIONS}</a></li>
                             </ui:fragment>
                             <ui:fragment rendered="#{claimPageBean.canPrintLease}">
                                 <li><a href="#restrictions" data-toggle="tab">#{msg.GENERAL_LABEL_RESTRICTIONS}</a></li>
                             </ui:fragment>
-                            <li><a href="#additional" data-toggle="tab">#{msg.CLAIM_PAGE_ADJACENCIES}</a></li>
-                            <li><a href="#comments" data-toggle="tab">#{msg.CLAIM_PAGE_COMMENTS}</a></li>
+                            <c:if test="#{!activeUserBean.investor and !activeUserBean.firstNation}">
+                                <li><a href="#additional" data-toggle="tab">#{msg.CLAIM_PAGE_ADJACENCIES}</a></li>
+                                <li><a href="#comments" data-toggle="tab">#{msg.CLAIM_PAGE_COMMENTS}</a></li>
+                            </c:if>
                             <ui:include src="/controls/DynaFormHeaders.xhtml"></ui:include>
                         </ul>
                     </div>
@@ -156,208 +160,351 @@
                         </div>
 
                         <div class="tab-pane" id="general">
-                            <div style="padding: 15px 0px;width:700px;">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_NUMBER}
-                                        </label>
-                                        <br />
-                                        #{claimPageBean.claim.nr}
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_LODGEMENT_DATE}
-                                        </label>
-                                        <br />
-                                        #{dateBean.formatDate(claimPageBean.claim.lodgementDate)}
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_CHALLENGE_EXPIRATION}
-                                        </label>
-                                        <br />
-                                        #{dateBean.formatDate(claimPageBean.claim.challengeExpiryDate)}
-                                    </div>
-                                </div>
-
-                                <div class="splitter"></div>
-
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_CLAIM_TYPE}
-                                        </label>
-                                        <br />
-                                        #{claimPageBean.claimType}
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_START_DATE}
-                                        </label>
-                                        <br />
-                                        #{dateBean.getShortDate(claimPageBean.claim.startDate)}
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_LAND_USE}
-                                        </label>
-                                        <br />
-                                        #{claimPageBean.landUseName}
-                                    </div>
-                                </div>
-
-                                <div class="splitter"></div>
-
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <label>
-                                            #{msg.MAP_CONTROL_AREA}
-                                        </label>
-                                        <br />
-                                        <h:outputLabel value="#{claimPageBean.claim.claimArea/10000}" /> hectare
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_CLAIM_NAME}
-                                        </label>
-                                        <br />
-                                        #{claimPageBean.claim.description}
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_LOCATION}
-                                        </label>
-                                        <br />
-                                        #{claimPageBean.location}
-                                    </div>
-                                </div>
-
-                                <div class="splitter"></div>
-
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_RECORDER}
-                                        </label>
-                                        <br />
-                                        #{claimPageBean.recorderName}
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_ASSIGNEE}
-                                        </label>
-                                        <br />
-                                        #{claimPageBean.assigneeName}
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_DECISION_DATE}
-                                        </label>
-                                        <br />
-                                        #{dateBean.formatDate(claimPageBean.claim.decisionDate)}
-                                    </div>
-                                </div>
-
-                                <div class="splitter"></div>
-
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_ISSUANCE_DATE}
-                                        </label>
-                                        <br />
-                                        #{dateBean.formatDate(claimPageBean.claim.issuanceDate)}
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_CHALLENGED_CLAIM}
-                                        </label>
-                                        <br />
-                                        <c:if test="#{not empty claimPageBean.challengedClaim}">
-                                            <a href="#{request.contextPath}/claim/ViewClaim.xhtml?id=#{claimPageBean.challengedClaim.id}">
-                                                ##{claimPageBean.challengedClaim.nr}
-                                            </a>
-                                        </c:if>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_CHALLENGING_CLAIMS}
-                                        </label>
-                                        <br />
-                                        <c:if test="#{not empty claimPageBean.challengingClaims}">
-                                            <ui:repeat value="#{claimPageBean.challengingClaims}" var="c" varStatus="status">
-                                                <c:if test="#{status.index gt 0}">
-                                                    ,
-                                                </c:if>
-                                                <a href="#{request.contextPath}/claim/ViewClaim.xhtml?id=#{c.id}">
-                                                    ##{c.nr}
-                                                </a>
-                                            </ui:repeat>
-                                        </c:if>
-                                    </div>
-                                </div>
-
-                                <div class="splitter"></div>
-
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_STATUS}
-                                        </label>
-                                        <br />
-                                        <h:outputText value="#{claimPageBean.statusName}" escape="false" />
-                                    </div>
-                                </div>
-
-                                <div class="splitter"></div>
-
-                                <h:panelGroup layout="block" class="row" rendered="#{not empty claimPageBean.claim.rejectionReasonCode}">
-                                    <div class="col-md-12">
-                                        <label>
-                                            #{msg.CLAIM_PAGE_REJECTION_REASON}
-                                        </label>
-                                        <br />
-                                        <i>#{claimPageBean.rejectionReason}</i>
-                                    </div>
-                                    <br />
-                                </h:panelGroup>
-
-                                <h:panelGroup id="divHistoryLabel" layout="block" rendered="#{claimPageBean.hasHistory}">
-                                    <div class="HistoryLabel" style="margin-bottom: 10px;">#{msg.GENERAL_LABEL_HISTORY}</div>
+                            <div style="padding: 15px 0px;max-width:700px;">
+                                
+                                <c:if test="#{activeUserBean.investor or activeUserBean.firstNation}">
+                                    
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <label>
-                                                #{msg.CLAIM_PAGE_PARENT_CLAIMS}
+                                                #{msg.CLAIM_PAGE_NUMBER}
                                             </label>
                                             <br />
-                                            <ui:repeat var="c" value="#{claimPageBean.parentClaims}" varStatus="s">
-                                                <ui:fragment rendered="#{s.index gt 0}">
-                                                    ,
-                                                </ui:fragment>
-                                                <a href="#{request.contextPath}/claim/ViewClaim.xhtml?id=#{c.id}">#{c.nr}</a>
-                                            </ui:repeat>
+                                            #{claimPageBean.claim.nr}
                                         </div>
-
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <label>
-                                                #{msg.CLAIM_PAGE_CHILDREN_CLAIMS}
+                                                #{msg.CLAIM_PAGE_START_DATE}
                                             </label>
                                             <br />
-                                            <ui:repeat var="c" value="#{claimPageBean.childrenClaims}" varStatus="s">
-                                                <ui:fragment rendered="#{s.index gt 0}">,</ui:fragment>
-                                                <a href="#{request.contextPath}/claim/ViewClaim.xhtml?id=#{c.id}">#{c.nr}</a>
-                                            </ui:repeat>
+                                            #{dateBean.getShortDate(claimPageBean.claim.startDate)}
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_DECISION_DATE}
+                                            </label>
+                                            <br />
+                                            #{dateBean.getShortDate(claimPageBean.claim.decisionDate)}
                                         </div>
                                     </div>
-                                    <br />
-                                </h:panelGroup>
+                                    
+                                    <div class="splitter"></div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.REGISTRATIONPAGE_COMMUNITY_NAME}
+                                            </label>
+                                            <br />
+                                            #{boundaryPageBean.getBoundaryName(claimPageBean.claim.boundaryId)}
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.CLAIM_SEARCH_AREA_HA}
+                                            </label>
+                                            <br />
+                                            <h:outputText value="#{claimPageBean.claim.claimArea/10000}">
+                                                <fn:convertNumber maxFractionDigits="2" groupingUsed="true" />
+                                            </h:outputText>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_STATUS}
+                                            </label>
+                                            <br />
+                                            <h:outputText value="#{claimPageBean.statusName}" escape="false" />
+                                        </div>
+                                    </div>
+
+                                    <div class="splitter"></div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_CLAIM_TYPE}
+                                            </label>
+                                            <br />
+                                            #{claimPageBean.claimType}
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_LAND_USE}
+                                            </label>
+                                            <br />
+                                            #{claimPageBean.landUseName}
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_ISSUANCE_DATE}
+                                            </label>
+                                            <br />
+                                            #{dateBean.formatDate(claimPageBean.claim.issuanceDate)}
+                                        </div>
+                                    </div>
+
+                                    <div class="splitter"></div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_CLAIM_NAME}
+                                            </label>
+                                            <br />
+                                            #{claimPageBean.claim.description}
+                                        </div>
+                                    </div>
+
+                                    <div class="splitter"></div>
+
+                                    <h:panelGroup layout="block" class="row" rendered="#{not empty claimPageBean.claim.rejectionReasonCode}">
+                                        <div class="col-md-12">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_REJECTION_REASON}
+                                            </label>
+                                            <br />
+                                            <i>#{claimPageBean.rejectionReason}</i>
+                                        </div>
+                                        <br />
+                                    </h:panelGroup>
+
+                                    <h:panelGroup id="divHistoryLabel" layout="block" rendered="#{claimPageBean.hasHistory}">
+                                        <div class="HistoryLabel" style="margin-bottom: 10px;">#{msg.GENERAL_LABEL_HISTORY}</div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>
+                                                    #{msg.CLAIM_PAGE_PARENT_CLAIMS}
+                                                </label>
+                                                <br />
+                                                <ui:repeat var="c" value="#{claimPageBean.parentClaims}" varStatus="s">
+                                                    <ui:fragment rendered="#{s.index gt 0}">
+                                                        ,
+                                                    </ui:fragment>
+                                                    <a href="#{request.contextPath}/claim/ViewClaim.xhtml?id=#{c.id}">#{c.nr}</a>
+                                                </ui:repeat>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label>
+                                                    #{msg.CLAIM_PAGE_CHILDREN_CLAIMS}
+                                                </label>
+                                                <br />
+                                                <ui:repeat var="c" value="#{claimPageBean.childrenClaims}" varStatus="s">
+                                                    <ui:fragment rendered="#{s.index gt 0}">,</ui:fragment>
+                                                    <a href="#{request.contextPath}/claim/ViewClaim.xhtml?id=#{c.id}">#{c.nr}</a>
+                                                </ui:repeat>
+                                            </div>
+                                        </div>
+                                        <br />
+                                    </h:panelGroup>
+                                    
+                                </c:if>
+                                <c:if test="#{!activeUserBean.investor and !activeUserBean.firstNation}">
+                                    
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_NUMBER}
+                                            </label>
+                                            <br />
+                                            #{claimPageBean.claim.nr}
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_LODGEMENT_DATE}
+                                            </label>
+                                            <br />
+                                            #{dateBean.formatDate(claimPageBean.claim.lodgementDate)}
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_CHALLENGE_EXPIRATION}
+                                            </label>
+                                            <br />
+                                            #{dateBean.formatDate(claimPageBean.claim.challengeExpiryDate)}
+                                        </div>
+                                    </div>
+
+                                    <div class="splitter"></div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_CLAIM_TYPE}
+                                            </label>
+                                            <br />
+                                            #{claimPageBean.claimType}
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_START_DATE}
+                                            </label>
+                                            <br />
+                                            #{dateBean.getShortDate(claimPageBean.claim.startDate)}
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_LAND_USE}
+                                            </label>
+                                            <br />
+                                            #{claimPageBean.landUseName}
+                                        </div>
+                                    </div>
+
+                                    <div class="splitter"></div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.CLAIM_SEARCH_AREA_HA}
+                                            </label>
+                                            <br />
+                                            <h:outputText value="#{claimPageBean.claim.claimArea/10000}">
+                                                <fn:convertNumber maxFractionDigits="2" groupingUsed="true" />
+                                            </h:outputText>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_CLAIM_NAME}
+                                            </label>
+                                            <br />
+                                            #{claimPageBean.claim.description}
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.REGISTRATIONPAGE_COMMUNITY_NAME}
+                                            </label>
+                                            <br />
+                                            #{boundaryPageBean.getBoundaryName(claimPageBean.claim.boundaryId)}
+                                        </div>
+                                    </div>
+
+                                    <div class="splitter"></div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_RECORDER}
+                                            </label>
+                                            <br />
+                                            #{claimPageBean.recorderName}
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_ASSIGNEE}
+                                            </label>
+                                            <br />
+                                            #{claimPageBean.assigneeName}
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_DECISION_DATE}
+                                            </label>
+                                            <br />
+                                            #{dateBean.formatDate(claimPageBean.claim.decisionDate)}
+                                        </div>
+                                    </div>
+
+                                    <div class="splitter"></div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_ISSUANCE_DATE}
+                                            </label>
+                                            <br />
+                                            #{dateBean.formatDate(claimPageBean.claim.issuanceDate)}
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_CHALLENGED_CLAIM}
+                                            </label>
+                                            <br />
+                                            <c:if test="#{not empty claimPageBean.challengedClaim}">
+                                                <a href="#{request.contextPath}/claim/ViewClaim.xhtml?id=#{claimPageBean.challengedClaim.id}">
+                                                    ##{claimPageBean.challengedClaim.nr}
+                                                </a>
+                                            </c:if>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_CHALLENGING_CLAIMS}
+                                            </label>
+                                            <br />
+                                            <c:if test="#{not empty claimPageBean.challengingClaims}">
+                                                <ui:repeat value="#{claimPageBean.challengingClaims}" var="c" varStatus="status">
+                                                    <c:if test="#{status.index gt 0}">
+                                                        ,
+                                                    </c:if>
+                                                    <a href="#{request.contextPath}/claim/ViewClaim.xhtml?id=#{c.id}">
+                                                        ##{c.nr}
+                                                    </a>
+                                                </ui:repeat>
+                                            </c:if>
+                                        </div>
+                                    </div>
+
+                                    <div class="splitter"></div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_STATUS}
+                                            </label>
+                                            <br />
+                                            <h:outputText value="#{claimPageBean.statusName}" escape="false" />
+                                        </div>
+                                    </div>
+
+                                    <div class="splitter"></div>
+
+                                    <h:panelGroup layout="block" class="row" rendered="#{not empty claimPageBean.claim.rejectionReasonCode}">
+                                        <div class="col-md-12">
+                                            <label>
+                                                #{msg.CLAIM_PAGE_REJECTION_REASON}
+                                            </label>
+                                            <br />
+                                            <i>#{claimPageBean.rejectionReason}</i>
+                                        </div>
+                                        <br />
+                                    </h:panelGroup>
+
+                                    <h:panelGroup id="divHistoryLabel" layout="block" rendered="#{claimPageBean.hasHistory}">
+                                        <div class="HistoryLabel" style="margin-bottom: 10px;">#{msg.GENERAL_LABEL_HISTORY}</div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>
+                                                    #{msg.CLAIM_PAGE_PARENT_CLAIMS}
+                                                </label>
+                                                <br />
+                                                <ui:repeat var="c" value="#{claimPageBean.parentClaims}" varStatus="s">
+                                                    <ui:fragment rendered="#{s.index gt 0}">
+                                                        ,
+                                                    </ui:fragment>
+                                                    <a href="#{request.contextPath}/claim/ViewClaim.xhtml?id=#{c.id}">#{c.nr}</a>
+                                                </ui:repeat>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label>
+                                                    #{msg.CLAIM_PAGE_CHILDREN_CLAIMS}
+                                                </label>
+                                                <br />
+                                                <ui:repeat var="c" value="#{claimPageBean.childrenClaims}" varStatus="s">
+                                                    <ui:fragment rendered="#{s.index gt 0}">,</ui:fragment>
+                                                    <a href="#{request.contextPath}/claim/ViewClaim.xhtml?id=#{c.id}">#{c.nr}</a>
+                                                </ui:repeat>
+                                            </div>
+                                        </div>
+                                        <br />
+                                    </h:panelGroup>
+                                </c:if>
+                                
                             </div>
                         </div>
 
                         <div class="tab-pane" id="claimant">
-                            <div style="padding: 15px 0px;width:700px;">
+                            <div style="padding: 15px 0px;max-width:700px;">
                                 <ui:include src="/controls/Claimant.xhtml">
                                     <ui:param name="allowEdit" value="false" rendererType="java.lang.Boolean"></ui:param>
                                 </ui:include>
@@ -365,7 +512,7 @@
                         </div>
 
                         <div class="tab-pane" id="owners">
-                            <div style="padding: 15px 0px;width:800px;">
+                            <div style="padding: 15px 0px;max-width:800px;">
                                 <ui:include src="/controls/Owners.xhtml">
                                     <ui:param name="allowEdit" value="false" rendererType="java.lang.Boolean"></ui:param>
                                     <ui:param name="showHistory" value="true" rendererType="java.lang.Boolean"></ui:param>
@@ -386,7 +533,7 @@
                         </ui:fragment>
 
                         <div class="tab-pane" id="attachments">
-                            <div style="padding: 15px 0px;width:850px;">
+                            <div style="padding: 15px 0px;max-width:850px;overflow-x: auto;">
                                 <ui:include src="/controls/ClaimAttachmentsTable.xhtml">
                                     <ui:param name="allowEdit" value="false" rendererType="java.lang.Boolean"></ui:param>
                                 </ui:include>
@@ -399,57 +546,58 @@
                             <ui:param name="popupColumnsNumber" value="3" rendererType="java.lang.Integer" />
                         </ui:include>
 
-                        <div class="tab-pane" id="comments">
-                            <div style="padding: 15px 0px;width:850px;">
-                                <ui:include src="/controls/ClaimComments.xhtml">
-                                    <ui:param name="allowEdit" value="false" rendererType="java.lang.Boolean"></ui:param>
-                                </ui:include>
+                        <c:if test="#{!activeUserBean.investor and !activeUserBean.firstNation}">
+                            <div class="tab-pane" id="additional">
+                                <div style="padding: 15px 0px;width:850px;">
+                                    <label>
+                                        #{msg.CLAIM_PAGE_NOTES}
+                                    </label>
+                                    <br />
+                                    <i>#{claimPageBean.claim.notes}</i>
+
+                                    <div class="splitter"></div>
+
+                                    <label>
+                                        #{msg.CLAIM_PAGE_NORTH_ADJACENCY}
+                                    </label>
+                                    <br />
+                                    <i>#{claimPageBean.claim.northAdjacency}</i>
+
+                                    <div class="splitter"></div>
+
+                                    <label>
+                                        #{msg.CLAIM_PAGE_SOUTH_ADJACENCY}
+                                    </label>
+                                    <br />
+                                    <i>#{claimPageBean.claim.southAdjacency}</i>
+
+                                    <div class="splitter"></div>
+
+                                    <label>
+                                        #{msg.CLAIM_PAGE_EAST_ADJACENCY}
+                                    </label>
+                                    <br />
+                                    <i>#{claimPageBean.claim.eastAdjacency}</i>
+
+                                    <div class="splitter"></div>
+
+                                    <label>
+                                        #{msg.CLAIM_PAGE_WEST_ADJACENCY}
+                                    </label>
+                                    <br />
+                                    <i>#{claimPageBean.claim.westAdjacency}</i>
+
+                                    <div class="splitter"></div>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="tab-pane" id="additional">
-                            <div style="padding: 15px 0px;width:850px;">
-                                <label>
-                                    #{msg.CLAIM_PAGE_NOTES}
-                                </label>
-                                <br />
-                                <i>#{claimPageBean.claim.notes}</i>
-
-                                <div class="splitter"></div>
-
-                                <label>
-                                    #{msg.CLAIM_PAGE_NORTH_ADJACENCY}
-                                </label>
-                                <br />
-                                <i>#{claimPageBean.claim.northAdjacency}</i>
-
-                                <div class="splitter"></div>
-
-                                <label>
-                                    #{msg.CLAIM_PAGE_SOUTH_ADJACENCY}
-                                </label>
-                                <br />
-                                <i>#{claimPageBean.claim.southAdjacency}</i>
-
-                                <div class="splitter"></div>
-
-                                <label>
-                                    #{msg.CLAIM_PAGE_EAST_ADJACENCY}
-                                </label>
-                                <br />
-                                <i>#{claimPageBean.claim.eastAdjacency}</i>
-
-                                <div class="splitter"></div>
-
-                                <label>
-                                    #{msg.CLAIM_PAGE_WEST_ADJACENCY}
-                                </label>
-                                <br />
-                                <i>#{claimPageBean.claim.westAdjacency}</i>
-
-                                <div class="splitter"></div>
+                            <div class="tab-pane" id="comments">
+                                <div style="padding: 15px 0px;max-width:850px;overflow-x: auto;">
+                                    <ui:include src="/controls/ClaimComments.xhtml">
+                                        <ui:param name="allowEdit" value="false" rendererType="java.lang.Boolean"></ui:param>
+                                    </ui:include>
+                                </div>
                             </div>
-                        </div>
+                        </c:if>
                     </div>
                 </div>
 

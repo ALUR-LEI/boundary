@@ -8,6 +8,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.sola.common.ConfigConstants;
+import org.sola.common.StringUtility;
 import org.sola.opentenure.services.boundary.beans.AbstractBackingBean;
 import org.sola.opentenure.services.boundary.beans.language.LanguageBean;
 import org.sola.cs.services.ejb.cache.businesslogic.CacheCSEJBLocal;
@@ -52,7 +53,7 @@ public class MapSettingsBean extends AbstractBackingBean {
         }
         return cacheEjb.get(CS_OFFLINE_MODE).toString().equals("1");
     }
-    
+
     public String getCommunityArea() {
         if (!cacheEjb.containsKey(MAP_COMMUNITY_AREA)) {
             init();
@@ -94,7 +95,7 @@ public class MapSettingsBean extends AbstractBackingBean {
         }
         return cacheEjb.get(MAP_EPSG);
     }
-    
+
     public String getMapPrintProj4() {
         if (!cacheEjb.containsKey(MAP_PRINT_PROJ4)) {
             init();
@@ -121,7 +122,9 @@ public class MapSettingsBean extends AbstractBackingBean {
         return layer.getMetadataList().toArray(new ConfigMapLayerMetadata[layer.getMetadataList().size()]);
     }
 
-    /** Returns WMS layer parameters sent to the server. */
+    /**
+     * Returns WMS layer parameters sent to the server.
+     */
     public String getLayerParamsString(ConfigMapLayer layer, boolean addCommaInFront) {
         if (layer == null || layer.getMetadataList() == null) {
             return "";
@@ -129,13 +132,22 @@ public class MapSettingsBean extends AbstractBackingBean {
 
         String result = "";
 
+        
         for (ConfigMapLayerMetadata param : layer.getMetadataList()) {
-            if (!param.isForClient() && layer.getTypeCode().equalsIgnoreCase("wms") 
+            if (!param.isForClient() && layer.getTypeCode().equalsIgnoreCase("wms")
                     && !param.getName().equalsIgnoreCase("LEGEND_OPTIONS")) {
                 if (!result.equals("")) {
                     result += ", ";
                 }
-                result += param.getName() + ": '" + param.getValue() + "'";
+                // Replace username param
+                if (param.getValue().equalsIgnoreCase("{user}")) {
+                    String user = getUserName();
+                    if (!StringUtility.isEmpty(user)) {
+                        result += param.getName() + ": '" + "user:" + user.replace("'", "\\'") + "'";
+                    }
+                } else {
+                    result += param.getName() + ": '" + param.getValue() + "'";
+                }
             }
         }
 
@@ -145,7 +157,9 @@ public class MapSettingsBean extends AbstractBackingBean {
         return result;
     }
 
-    /** Returns WMS layer options used by map component. */
+    /**
+     * Returns WMS layer options used by map component.
+     */
     public String getLayerOptionsString(ConfigMapLayer layer, boolean addCommaInFront) {
         if (layer == null || layer.getMetadataList() == null) {
             return "";
@@ -154,7 +168,7 @@ public class MapSettingsBean extends AbstractBackingBean {
         String result = "";
 
         for (ConfigMapLayerMetadata param : layer.getMetadataList()) {
-            if (param.isForClient() && layer.getTypeCode().equalsIgnoreCase("wms") 
+            if (param.isForClient() && layer.getTypeCode().equalsIgnoreCase("wms")
                     && !param.getName().equalsIgnoreCase("LEGEND_OPTIONS")) {
                 if (!result.equals("")) {
                     result += ", ";
@@ -168,7 +182,7 @@ public class MapSettingsBean extends AbstractBackingBean {
         }
         return result;
     }
-    
+
     /**
      * Return WMS legend options
      */
@@ -203,7 +217,7 @@ public class MapSettingsBean extends AbstractBackingBean {
         cacheEjb.put(MAP_COMMUNITY_AREA, systemEjb.getSetting(ConfigConstants.OT_COMMUNITY_AREA, ""));
         cacheEjb.put(CS_OFFLINE_MODE, systemEjb.getSetting(ConfigConstants.OT_OFFLINE_MODE, "0"));
         cacheEjb.put(MAP_PRINT_PROJ4, systemEjb.getSetting(ConfigConstants.OT_TITLE_PLAN_CRS_PROJ4, ""));
-        
+
         if (mapSettings != null) {
             cacheEjb.put(MAP_WEST, mapSettings.get("map-west"));
             cacheEjb.put(MAP_NORTH, mapSettings.get("map-north"));

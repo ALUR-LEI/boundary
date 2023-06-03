@@ -178,6 +178,8 @@ OT.Map = function (mapOptions) {
             );
 
     // Init map
+    var isMobile = /Android|iPhone/i.test(navigator.userAgent);
+
     map = new OpenLayers.Map('map', {
         div: "map",
         allOverlays: false,
@@ -197,7 +199,12 @@ OT.Map = function (mapOptions) {
                 this.div = document.createElement('div');
                 var inputField = document.createElement('input');
 
-                $(inputField).attr("class", "map-search form-control");
+                var style = "map-search";
+                if (isMobile) {
+                    style = "map-search2";
+                }
+
+                $(inputField).attr("class", style + " form-control");
                 $(inputField).attr("placeholder", MSG.MAP_CONTROL_SEARCH);
 
                 $(inputField).on("click", function (e) {
@@ -206,6 +213,10 @@ OT.Map = function (mapOptions) {
                 });
 
                 $(inputField).on("mousedown", function (e) {
+                    e.stopPropagation();
+                });
+
+                $(inputField).on("touchstart", function (e) {
                     e.stopPropagation();
                 });
 
@@ -265,10 +276,11 @@ OT.Map = function (mapOptions) {
                     this.menu.element.outerWidth(300);
                 }
 
-                $(this.div).css({"z-index": "3000"});
-                $(this.div).append(inputField);
-
-                return this.div;
+                //$(this.div).css({"z-index": "3000"});
+                //$(this.div).css({"background-color": "red"});
+                //$(this.div).append(inputField);
+                return inputField;
+                //return this.div;
             },
             CLASS_NAME: "OT.Map.Control.SearchControl"
         });
@@ -446,7 +458,7 @@ OT.Map = function (mapOptions) {
         draw: function () {
             this.clickHandler = new OpenLayers.Handler.Click(claimInfoControl,
                     {click: handleInfoClick},
-                    {delay: 0, single: true, double: false, stopSingle: false, stopDouble: true});
+                    {delay: 0, single: true, double: true, stopSingle: false, stopDouble: false, pixelTolerance: 1});
 
         },
         activate: function () {
@@ -456,7 +468,7 @@ OT.Map = function (mapOptions) {
         deactivate: function () {
             var deactivated = false;
             if (OpenLayers.Control.prototype.deactivate.apply(this, arguments)) {
-                this.clickHandler.deactivate();
+                //    this.clickHandler.deactivate();
                 deactivated = true;
             }
             return deactivated;
@@ -681,6 +693,13 @@ OT.Map = function (mapOptions) {
         ]
     });
 
+    var p = new Ext.Panel({
+        layout: 'border',
+        height: mapHeight,
+        region: 'center',
+        html: '<p>World!</p>'
+    });
+
     mapPanelContainer = new Ext.Panel({
         layout: 'border',
         height: mapHeight,
@@ -737,18 +756,37 @@ OT.Map = function (mapOptions) {
     this.renderMap = function () {
         setTimeout(function () {
             if (!isRendered) {
+                var mapWidth = $("#" + mapContainerName.replace(":", "\\:")).parent().width();
+                var winHeight = $(window).height();
+                
+                $("#loadDiv").width(mapWidth);
+                $("#loadDiv").height(winHeight);
+                $("#loadDiv").show();
+                
                 mapPanelContainer.render(mapContainerName);
-                map.zoomToExtent(initialZoomBounds);
-                mapPanelContainer.setWidth($("#" + mapContainerName.replace(":", "\\:")).parent().width());
                 map.addControl(new OpenLayers.Control.MousePosition({div: document.getElementById("lblMapMousePosition")}));
                 map.addControl(new OT.Map.Control.ScaleBar({div: document.getElementById("lblScaleBar")}));
+                mapPanelContainer.setWidth(mapWidth);
+                map.zoomToExtent(initialZoomBounds);
+                
                 isRendered = true;
+                if (isMobile) {
+                    $(".olControlZoom").hide();
+                }
+                showHideLegend();
+                mapPanelContainer.setHeight(winHeight);
+                
+                setTimeout(function () {
+                    mapPanelContainer.setHeight(mapHeight);
+                    $("#loadDiv").hide();
+                }, 100);
             }
-        }, 0);
+        }, 10);
     };
 
     // Subscribe to map resize event to adjust map width/height
     $(window).resize(function () {
+        showHideLegend();
         var escContainerName = "#" + mapContainerName.replace(":", "\\:");
         if ($(escContainerName).hasClass("fullScreen")) {
             mapPanelContainer.setHeight($(window).height());
@@ -1074,8 +1112,8 @@ OT.Map = function (mapOptions) {
                     $("#claimantName").text(response.claimantName);
                     $("#claimLodgingDate").text(lodgingDate);
                     $("#claimStatus").text(response.statusName);
-                 //   $("#claimArea").html(response.claimArea + " m<sup>2</sup>");
-                    $("#claimArea").html((response.claimArea/10000) + " hectare");
+                    //   $("#claimArea").html(response.claimArea + " m<sup>2</sup>");
+                    $("#claimArea").html((response.claimArea / 10000) + " hectare");
                 }
                 if (typeof response.level !== "undefined") {
                     // This is boundary
@@ -1083,7 +1121,7 @@ OT.Map = function (mapOptions) {
                     $("#boundaryName").attr('href', viewBoundaryUrl + '?id=' + response.id);
                     $("#boundaryName").text(response.name);
                     $("#boundaryType").text(response.typeName);
-                    if(response.parentName === null || response.parentName === ""){
+                    if (response.parentName === null || response.parentName === "") {
                         $("#boundaryDivParent").hide();
                     } else {
                         $("#boundaryParent").text(response.parentName);
@@ -1096,7 +1134,7 @@ OT.Map = function (mapOptions) {
                     infoPopup.setContentHTML(mapSpatialUnitInfoContent);
                     $("#levelId").text(response.levelId);
                     $("#label").text(response.label);
-                 }
+                }
 
             }
         } catch (ex) {
@@ -1164,7 +1202,7 @@ OT.Map = function (mapOptions) {
                                     }
                                 }
                             }
-                            
+
                             // Add feature to the snapping layer
                             if (!featureExists) {
                                 var featureToAdd = new OpenLayers.Format.WKT().read(response.geom);
@@ -1591,7 +1629,7 @@ OT.Map.Styles = {
         }, {
             context: {getLabel: function (feature) {
                     if (typeof feature.attributes.label !== 'undefined') {
-                        return feature.attributes.label + "\n\n(" + (feature.attributes.area/10000) + " ha)";
+                        return feature.attributes.label + "\n\n(" + (feature.attributes.area / 10000) + " ha)";
                     } else {
                         if (typeof feature.attributes.area !== 'undefined') {
                             "\n\n(" + (feature.attributes.area) + " m2)";
@@ -1741,4 +1779,19 @@ function calculateArea(feature) {
         }
     }
     return area;
+}
+
+var lastScreen = 0;
+var minScreen = 600;
+
+function showHideLegend() {
+    var width = $(window).width();
+    if (width < minScreen && (lastScreen > minScreen || lastScreen === 0)) {
+        $('.x-tool.x-tool-toggle.x-tool-collapse-west').click();
+        lastScreen = width;
+    }
+    if (width > minScreen && lastScreen < minScreen) {
+        $('.x-tool.x-tool-expand-west').click();
+        lastScreen = width;
+    }
 }

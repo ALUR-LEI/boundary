@@ -431,4 +431,8 @@
         <description>ModerateClaim</description>
         <role-name>ModerateClaim</role-name>
     </security-role>
+    <security-role>
+        <description>Investor</description>
+        <role-name>Investor</role-name>
+    </security-role>
 </web-app>

@@ -33,7 +33,6 @@ public class ProfilePageBean extends RegistrationPageBean {
 
     @PostConstruct
     private void init(){
-        //userBean = new UserBean(admin.getCurrentUser());
         CsGenericTranslator.getMapper().map(admin.getCurrentUser(), userBean);
     }
     

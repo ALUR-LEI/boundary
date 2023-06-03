@@ -77,10 +77,11 @@ public class LoginBean implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
         try {
-            request.logout();
+            //request.logout();
+            FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
             // Redirect
             context.getExternalContext().redirect(request.getContextPath() + "/login.xhtml");
-        } catch (ServletException e) {
+        } catch (Exception e) {
             context.addMessage(null, new FacesMessage(msgProvider.getErrorMessage(ErrorKeys.LOGIN_LOGOUT_FAILED)));
         }
     }

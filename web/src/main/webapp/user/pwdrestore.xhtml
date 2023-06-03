@@ -14,11 +14,11 @@
                 <div class="PageName">
                     #{msg.PASSWORD_RESTORE_PAGE_TITLE}
                 </div>
-                <div class="content" style="width: 300px;">
+                <div class="content" style="max-width: 300px;">
                     <h:panelGroup rendered="#{passwordRestorePageBean.showPasswordChange}">
                         <p>#{msg.PASSWORD_RESTORE_PAGE_ENTER_NEW_PASSWORD}</p>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-sm-12">
                                 <h:outputLabel for="txtPassword">
                                     #{msg.LOGINPAGE_PASSWORD} <i class="glyphicon glyphicon-required"></i>
                                 </h:outputLabel>
@@ -33,7 +33,7 @@
                         </div>
                         <div class="LineSpace"></div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-sm-12">
                                 <h:outputLabel for="txtPasswordConfirmation">
                                     #{msg.REGISTRATIONPAGE_CONFIRM_PASSWORD} <i class="glyphicon glyphicon-required"></i>
                                 </h:outputLabel>
@@ -48,7 +48,7 @@
                         </div>
                         <div class="LineSpace"></div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-sm-12">
                                 <h:commandButton value="#{msg.GENERAL_LABEL_CHANGE}" 
                                                  action="#{passwordRestorePageBean.changePassword()}" 
                                                  class="btn btn-default">

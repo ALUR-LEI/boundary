@@ -1,10 +1,14 @@
 package org.sola.opentenure.services.boundary.beans.security;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.sola.cs.services.ejb.refdata.entities.RrrType;
 import org.sola.opentenure.services.boundary.beans.AbstractModelBean;
 import org.sola.opentenure.services.boundary.beans.helpers.ErrorKeys;
 import org.sola.opentenure.services.boundary.beans.validation.Localized;
@@ -31,7 +35,7 @@ public class UserBean extends AbstractModelBean {
     private User user;
     private String passwordRepeat;
     private String oldPassword;
-
+    
     /** returns userName property name */
     public String getPropertyUserName(){
         return "userName";
@@ -192,6 +196,14 @@ public class UserBean extends AbstractModelBean {
 
     public void setDescription(String description) {
         user.setDescription(description);
+    }
+          
+    public String getAdminBoundaryId() {
+        return user.getAdminBoundaryId();
+    }
+
+    public void setAdminBoundaryId(String boundaryId) {
+        user.setAdminBoundaryId(boundaryId);
     }
     
     public UserBean() {

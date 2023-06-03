@@ -6,11 +6,13 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.sola.common.RolesConstants;
+import org.sola.common.StringUtility;
 import org.sola.opentenure.services.boundary.beans.AbstractModelBean;
 import org.sola.opentenure.services.boundary.beans.helpers.ErrorKeys;
 import org.sola.opentenure.services.boundary.beans.validation.Localized;
 import org.sola.opentenure.services.boundary.beans.validation.user.LoginGroup;
 import org.sola.cs.services.ejbs.admin.businesslogic.AdminCSEJBLocal;
+import org.sola.cs.services.ejbs.admin.businesslogic.repository.entities.User;
 
 /**
  * Stores user information
@@ -24,6 +26,7 @@ public class ActiveUserBean extends AbstractModelBean {
     
     private String username;
     private String password;
+    private User user = null;
     
     @NotEmpty(message = ErrorKeys.LOGIN_USERNAME_REQUIRED, 
             payload = Localized.class, groups = {LoginGroup.class})
@@ -72,7 +75,25 @@ public class ActiveUserBean extends AbstractModelBean {
         return adminEjb.isInRole(RolesConstants.CS_VIEW_REPORTS);
     }
     
+    public boolean isInvestor(){
+        return adminEjb.isInRole(RolesConstants.INVESTOR);
+    }
+    
+    public boolean isFirstNation(){
+        return !StringUtility.isEmpty(getUserBoundaryId());
+    }
+    
     public boolean getHasAdminRights(){
         return adminEjb.isUserAdmin();
+    }
+    
+    public String getUserBoundaryId() {
+        if(user == null) {
+            user = adminEjb.getCurrentUser();
+        }
+        if(user != null) {
+            return user.getAdminBoundaryId();
+        }
+        return null;
     }
 }

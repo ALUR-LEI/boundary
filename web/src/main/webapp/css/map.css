@@ -198,18 +198,34 @@ div.olControlMousePosition{
     top: 0px;
 }
 
+#loadDiv {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #e6eddf;
+    display: none;
+    z-index: 9999;
+}
+
 #mapCtrlWrapper * div{
     box-sizing: content-box !important;
 }
 
-.map-search{
-    position: absolute; 
-    top: 15px; 
+.map-search, .map-search2 {
+    position: absolute;
+    top: 15px;
     left: 45px;
     z-index:3001;
     width:220px;
     opacity: 0.6;
 }
+
+.map-search2 {
+    left: 15px;
+}
+
 .map-search-item{
     font-size: 12px;
     opacity: 0.8;

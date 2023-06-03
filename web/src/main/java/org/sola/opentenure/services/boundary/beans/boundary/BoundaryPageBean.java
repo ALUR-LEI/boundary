@@ -2,6 +2,7 @@ package org.sola.opentenure.services.boundary.beans.boundary;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -49,7 +50,7 @@ public class BoundaryPageBean extends AbstractBackingBean {
 
     @EJB
     AdminCSEJBLocal adminEjb;
-    
+
     @EJB
     ClaimEJBLocal claimEjb;
 
@@ -61,7 +62,7 @@ public class BoundaryPageBean extends AbstractBackingBean {
 
     @EJB
     SystemCSEJBLocal systemEjb;
-    
+
     @Inject
     MessageBean msg;
 
@@ -79,6 +80,7 @@ public class BoundaryPageBean extends AbstractBackingBean {
     private AdministrativeBoundarySearchResult[] parentBoundaries;
     private AdministrativeBoundarySearchResult[] allBoundariesFormatted;
     private AdministrativeBoundarySearchResult[] approvedBoundariesFormatted;
+
     public BoundaryPageBean() {
         super();
     }
@@ -111,14 +113,41 @@ public class BoundaryPageBean extends AbstractBackingBean {
             boundary.setStatusCode(AdministrativeBoundaryStatus.STATUS_PENDING);
         }
     }
+      
+    public String getBoundaryName(String id) {
+        if(StringUtility.isEmpty(id)) {
+            return "";
+        }
+        AdministrativeBoundary b = claimEjb.getAdministrativeBoundary(id);
+        if(b != null) {
+            return b.getName();
+        }
+        return "";
+    }
+    
+    public AdministrativeBoundary[] getBoundaries(String typeCode, String statusCode, boolean addDummy) {
+        List<AdministrativeBoundary> boundaries = claimEjb.getAdministrativeBoundaries(statusCode, typeCode);
+        if (boundaries == null) {
+            boundaries = new ArrayList<>();
+        }
 
+        if (addDummy) {
+            AdministrativeBoundary dummy = new AdministrativeBoundary();
+            dummy.setId("");
+            dummy.setName("");
+            boundaries.add(0, dummy);
+        }
+
+        return boundaries.toArray(new AdministrativeBoundary[boundaries.size()]);
+    }
+    
     public AdministrativeBoundarySearchResult[] getAllBoundariesFormatted(boolean addDummy) {
         if (allBoundariesFormatted == null) {
             allBoundariesFormatted = getFormattedBoundaries(searchEjb.searchAllAdministrativeBoundaries(langBean.getLocale()), addDummy);
         }
         return allBoundariesFormatted;
     }
-    
+
     public AdministrativeBoundarySearchResult[] getApprovedBoundariesFormatted(boolean addDummy) {
         if (approvedBoundariesFormatted == null) {
             approvedBoundariesFormatted = getFormattedBoundaries(searchEjb.searchApprovedAdministrativeBoundaries(langBean.getLocale()), addDummy);
@@ -172,20 +201,20 @@ public class BoundaryPageBean extends AbstractBackingBean {
     public String getRecorderName() {
         if (StringUtility.isEmpty(recorderName) && boundary != null) {
             recorderName = getFullUserName(boundary.getRecorderName());
-            if(StringUtility.isEmpty(recorderName)){
+            if (StringUtility.isEmpty(recorderName)) {
                 recorderName = StringUtility.empty(boundary.getRecorderName());
             }
         }
         return recorderName;
     }
-    
+
     public String getFullUserName(String userName) {
         if (!StringUtility.isEmpty(userName)) {
             return adminEjb.getUserFullName(userName);
         }
         return "";
     }
-    
+
     public String getFullParentNames() {
         if (StringUtility.isEmpty(boundary.getParentId())) {
             return "";
@@ -220,43 +249,43 @@ public class BoundaryPageBean extends AbstractBackingBean {
         return name;
     }
 
-    public String getBoundaryPrintCrsDescription(){
+    public String getBoundaryPrintCrsDescription() {
         return systemEjb.getSetting(ConfigConstants.BOUNDARY_PRINT_CRS_DESCRIPTION, "");
     }
-    
-    public String getBoundaryPrintProducedBy(){
+
+    public String getBoundaryPrintProducedBy() {
         return systemEjb.getSetting(ConfigConstants.BOUNDARY_PRINT_PRODUCED_BY, "");
     }
-    
-    public String getMonthAndYear(){
-        Format formatter = new SimpleDateFormat("MMMM", new Locale(langBean.getLocaleCodeForBundle())); 
+
+    public String getMonthAndYear() {
+        Format formatter = new SimpleDateFormat("MMMM", new Locale(langBean.getLocaleCodeForBundle()));
         String s = formatter.format(new Date());
         s = s.substring(0, 1).toUpperCase() + s.substring(1);
         Calendar cal = Calendar.getInstance();
-        
+
         return s + " " + cal.get(Calendar.YEAR);
     }
-    
-    public String getBoundaryPrintLocationDescription(){
+
+    public String getBoundaryPrintLocationDescription() {
         String location = "";
         String countryName = systemEjb.getSetting(ConfigConstants.BOUNDARY_PRINT_COUNTRY_NAME, "");
-        
+
         if (boundary != null && !StringUtility.isEmpty(boundary.getName())) {
             location = String.format(msgProvider.getMessage(MessagesKeys.BOUNDARY_PAGE_TITLE), boundary.getName(), getBoundaryTypeName());
             List<AdministrativeBoundarySearchResult> parents = searchEjb.searchParentAdministrativeBoundaries(boundary.getId(), langBean.getLocale());
-            if(parents != null && parents.size() > 0){
+            if (parents != null && parents.size() > 0) {
                 for (int i = 0; i < parents.size() - 1; i++) {
                     location += ", " + parents.get(i).getName() + " " + parents.get(i).getTypeName();
                 }
             }
         }
-        if(!StringUtility.isEmpty(countryName)){
+        if (!StringUtility.isEmpty(countryName)) {
             location += ", " + countryName;
         }
-        
+
         return String.format(msgProvider.getMessage(MessagesKeys.BOUNDARY_PRINT_PAGE_LOCATION_OF), location);
     }
-    
+
     public AdministrativeBoundary getBoundary() {
         return boundary;
     }
@@ -366,18 +395,19 @@ public class BoundaryPageBean extends AbstractBackingBean {
     public boolean getCanPrintCertificate() {
         return (boundary.getStatusCode().equalsIgnoreCase(AdministrativeBoundaryStatus.STATUS_APPROVED) && isInRole(RolesConstants.CS_MODERATE_CLAIM));
     }
-    
+
     public void checkCanEdit() throws Exception {
         if (!getCanEdit()) {
             throw new OTWebException(msgProvider.getErrorMessage(ErrorKeys.BOUNDARY_EDIT_NOT_ALLOWED));
         }
     }
-    
+
     public void checkCanPrintCertificate() throws Exception {
         if (!getCanPrintCertificate()) {
             throw new OTWebException(msgProvider.getErrorMessage(ErrorKeys.BOUNDARY_CERTIFICATE_NOT_ALLOWED));
         }
     }
+
     public void save() {
         try {
             runUpdate(new Runnable() {
@@ -394,7 +424,6 @@ public class BoundaryPageBean extends AbstractBackingBean {
         }
     }
 
-    
     public void approve() {
         try {
             if (!StringUtility.isEmpty(id) && getCanApprove()) {
@@ -411,7 +440,7 @@ public class BoundaryPageBean extends AbstractBackingBean {
             getContext().addMessage(null, new FacesMessage(processException(e, langBean.getLocale()).getMessage()));
         }
     }
-   
+
     public void revise() {
         try {
             if (!StringUtility.isEmpty(id) && getCanRevise()) {

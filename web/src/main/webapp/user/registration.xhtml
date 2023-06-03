@@ -13,9 +13,9 @@
             </ui:define>
             <ui:define name="content">
                 <div class="PageName"><i class="glyphicon glyphicon-user"></i> #{msg.REGISTRATIONPAGE_TITLE}</div>
-                <div class="content" style="width: 600px;">
+                <div class="content" style="max-width: 600px;">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <h:outputLabel for="txtUserName">
                                 #{msg.LOGINPAGE_USERNAME} <i class="glyphicon glyphicon-required"></i>
                             </h:outputLabel>
@@ -30,12 +30,12 @@
                                 <h:outputText escape="false" id="msgUserName" value="#{registrationPageBean.userNameValidation}" />
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                         </div>
                     </div>
                     <div class="LineSpace"></div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <h:outputLabel for="txtPassword">
                                 #{msg.LOGINPAGE_PASSWORD} <i class="glyphicon glyphicon-required"></i>
                             </h:outputLabel>
@@ -51,7 +51,7 @@
                                 <h:outputText escape="false" id="msgPassword" value="#{registrationPageBean.passwordValidation}" />
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <h:outputLabel for="txtPasswordConfirmation">
                                 #{msg.REGISTRATIONPAGE_CONFIRM_PASSWORD} <i class="glyphicon glyphicon-required"></i>
                             </h:outputLabel>
@@ -70,7 +70,7 @@
                     </div>
                     <div class="LineSpace"></div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <h:outputLabel for="txtFirstName">
                                 #{msg.REGISTRATIONPAGE_FIRST_NAME} <i class="glyphicon glyphicon-required"></i>
                             </h:outputLabel>
@@ -87,7 +87,7 @@
                                 <h:outputText escape="false" id="msgFirstNameConfirmation" value="#{registrationPageBean.firstNameValidation}" />
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <h:outputLabel for="txtLastName">
                                 #{msg.REGISTRATIONPAGE_LAST_NAME} <i class="glyphicon glyphicon-required"></i>
                             </h:outputLabel>
@@ -107,7 +107,7 @@
                     </div>
                     <div class="LineSpace"></div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <h:outputLabel for="txtEmail">
                                 #{msg.REGISTRATIONPAGE_EMAIL} <i class="glyphicon glyphicon-required"></i>
                             </h:outputLabel>
@@ -124,13 +124,13 @@
                                 <h:outputText escape="false" id="msgEmailConfirmation" value="#{registrationPageBean.emailValidation}" />
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             
                         </div>
                     </div>
                     <div class="LineSpace"></div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <h:outputLabel for="txtMobileNumber">
                                 #{msg.REGISTRATIONPAGE_MOBILE} <i class="glyphicon glyphicon-required"></i>
                             </h:outputLabel>
@@ -147,34 +147,39 @@
                                 <h:outputText escape="false" id="msgMobileConfirmation" value="#{registrationPageBean.mobileValidation}" />
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             
                         </div>
                     </div>
                     <div class="LineSpace"></div>
                     <div class="row">
-                        <div class="col-md-6">
-                            <h:outputLabel for="txtCommunityName">
+                        <div class="col-sm-6">
+                            <h:outputLabel for="cbxBoundary">
                                 #{msg.REGISTRATIONPAGE_COMMUNITY_NAME}
                             </h:outputLabel>
                             <br />
-                            <h:inputText id="txtCommunityName" 
-                                         autocomplete="off"
-                                         value="#{registrationPageBean.userBean.description}" 
-                                         class="form-control" />
+                            <h:selectOneListbox
+                                id="cbxBoundary" 
+                                size="1"
+                                value="#{registrationPageBean.userBean.adminBoundaryId}"
+                                class="form-control">
+                                <f:selectItems value='#{boundaryPageBean.getBoundaries("interest", "", true)}' var="b"
+                                               itemLabel="#{b.name}" 
+                                               itemValue="#{b.id}" />
+                            </h:selectOneListbox>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             
                         </div>
                     </div>
                     <div class="LineSpace"></div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <h:outputLabel for="txtCaptcha">
                                 #{msg.REGISTRATIONPAGE_CAPTCHA} <i class="glyphicon glyphicon-required"></i>
                             </h:outputLabel>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-sm-6">
                                     <div id="divCaptcha">
                                         <h:inputText id="txtCaptcha" 
                                                      maxlength="6"
@@ -189,25 +194,25 @@
                                         <h:outputText escape="false" id="msgCaptchaConfirmation" value="#{registrationPageBean.captchaValidation}" />
                                     </div>
                                 </div>
-                                <div class="col-md-6" style="text-align: right;">
+                                <div class="col-sm-6" style="text-align: left;">
                                     <img src="#{request.contextPath}/captcha.jpg" />
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             
                         </div>
                     </div>
                     <div class="LineSpace"></div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <h:commandButton value="#{msg.REGISTRATIONPAGE_REGISTER}" 
                                              action="#{registrationPageBean.register()}" 
                                              class="btn btn-default">
                                 <f:ajax execute="@form" render="@form :headerForm" />
                             </h:commandButton>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                         </div>
                     </div>
                 </div>

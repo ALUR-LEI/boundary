@@ -4,7 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"   
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:body>
         <ui:composition template="../templates/BasicTemplate.xhtml">
             <ui:define name="title">
@@ -12,9 +13,9 @@
             </ui:define>
             <ui:define name="content">
                 <div class="PageName"><i class="glyphicon glyphicon-user"></i> #{msg.PROFILEPAGE_TITLE}</div>
-                <div class="content" style="width: 600px;">
+                <div class="content" style="max-width: 600px;">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <h:outputLabel for="txtFirstName">
                                 #{msg.REGISTRATIONPAGE_FIRST_NAME} <i class="glyphicon glyphicon-required"></i>
                             </h:outputLabel>
@@ -31,7 +32,7 @@
                                 <h:outputText escape="false" id="msgFirstNameConfirmation" value="#{profilePageBean.firstNameValidation}" />
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <h:outputLabel for="txtLastName">
                                 #{msg.REGISTRATIONPAGE_LAST_NAME} <i class="glyphicon glyphicon-required"></i>
                             </h:outputLabel>
@@ -51,7 +52,7 @@
                     </div>
                     <div class="LineSpace"></div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <h:outputLabel for="txtEmail">
                                 #{msg.REGISTRATIONPAGE_EMAIL} <i class="glyphicon glyphicon-required"></i>
                             </h:outputLabel>
@@ -68,13 +69,13 @@
                                 <h:outputText escape="false" id="msgEmailConfirmation" value="#{profilePageBean.emailValidation}" />
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
 
                         </div>
                     </div>
                     <div class="LineSpace"></div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <h:outputLabel for="txtMobileNumber">
                                 #{msg.REGISTRATIONPAGE_MOBILE} <i class="glyphicon glyphicon-required"></i>
                             </h:outputLabel>
@@ -91,39 +92,37 @@
                                 <h:outputText escape="false" id="msgMobileConfirmation" value="#{profilePageBean.mobileValidation}" />
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
 
                         </div>
                     </div>
-                    <div class="LineSpace"></div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h:outputLabel for="txtCommunityName">
-                                #{msg.REGISTRATIONPAGE_COMMUNITY_NAME}
-                            </h:outputLabel>
-                            <br />
-                            <h:inputText id="txtCommunityName" 
-                                         maxlength="20"
-                                         value="#{profilePageBean.userBean.description}" 
-                                         class="form-control" 
-                                         autocomplete="off" />
-                        </div>
-                        <div class="col-md-6">
+                    <c:if test='#{boundaryPageBean.getBoundaryName(profilePageBean.userBean.adminBoundaryId) != ""}'>
+                        <div class="LineSpace"></div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h:outputLabel for="txtCommunityName">
+                                    #{msg.REGISTRATIONPAGE_COMMUNITY_NAME}
+                                </h:outputLabel>
+                                <br />
+                                #{boundaryPageBean.getBoundaryName(profilePageBean.userBean.adminBoundaryId)}
+                            </div>
+                            <div class="col-sm-6">
 
+                            </div>
                         </div>
-                    </div>
-
+                    </c:if>
+                    
                     <div class="LineSpace"></div>
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <h:commandButton value="#{msg.GENERAL_LABEL_SAVE}" 
                                              action="#{profilePageBean.saveProfile}" 
                                              class="btn btn-default">
                                 <f:ajax execute="@form" render="@form :headerForm" />
                             </h:commandButton>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
 
                         </div>
                     </div>
@@ -135,7 +134,7 @@
                     <div class="LineSpace"></div>
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <h:outputLabel for="txtOldPassword">
                                 #{msg.PROFILEPAGE_CURRENT_PASSWORD} <i class="glyphicon glyphicon-required"></i>
                             </h:outputLabel>
@@ -151,7 +150,7 @@
                                 <h:outputText escape="false" id="msgOldPassword" value="#{profilePageBean.oldPasswordValidation}" />
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
 
                         </div>
                     </div>
@@ -159,7 +158,7 @@
                     <div class="LineSpace"></div>
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <h:outputLabel for="txtPassword">
                                 #{msg.PROFILEPAGE_NEW_PASSWORD} <i class="glyphicon glyphicon-required"></i>
                             </h:outputLabel>
@@ -175,7 +174,7 @@
                                 <h:outputText escape="false" id="msgPassword" value="#{profilePageBean.passwordValidation}" />
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <h:outputLabel for="txtPasswordConfirmation">
                                 #{msg.REGISTRATIONPAGE_CONFIRM_PASSWORD} <i class="glyphicon glyphicon-required"></i>
                             </h:outputLabel>
@@ -196,7 +195,7 @@
                     <div class="LineSpace"></div>
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <h:commandButton id="btnChange"
                                              value="#{msg.GENERAL_LABEL_CHANGE}" 
                                              action="#{profilePageBean.changePassword()}" 

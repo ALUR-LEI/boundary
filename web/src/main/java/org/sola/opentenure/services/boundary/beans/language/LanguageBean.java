@@ -170,7 +170,13 @@ public class LanguageBean extends AbstractBackingBean {
         mapSettings.init();
         try {
             // Redirect to the same page to avoid postback
-            getExtContext().redirect(((HttpServletRequest) getRequest()).getRequestURI());
+            HttpServletRequest req = (HttpServletRequest) getRequest();
+            String qString = req.getParameter("params");
+            String url = req.getRequestURI();
+            if(!StringUtility.isEmpty(qString)) {
+                url += "?" + qString;
+            }
+            getExtContext().redirect(url);
         } catch (IOException ex) {
         }
     }

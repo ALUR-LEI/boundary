@@ -17,7 +17,7 @@
                 <div class="content" style="width: 300px;">
                     <h:panelGroup rendered="#{passwordForgotPageBean.showRestorePassword}">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-sm-12">
                                 <h:outputLabel for="txtEmail">
                                     #{msg.REGISTRATIONPAGE_EMAIL} <i class="glyphicon glyphicon-required"></i>
                                 </h:outputLabel>
@@ -37,12 +37,12 @@
                         </div>
                         <div class="LineSpace"></div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-sm-12">
                                 <h:outputLabel for="txtCaptcha">
                                     #{msg.REGISTRATIONPAGE_CAPTCHA} <i class="glyphicon glyphicon-required"></i>
                                 </h:outputLabel>
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-sm-6">
                                         <h:inputText id="txtCaptcha" 
                                                      value="#{passwordForgotPageBean.captcha}" 
                                                      class="form-control" 
@@ -51,7 +51,7 @@
                                                      transient="true"
                                                      requiredMessage="#{err.USER_REGISTRATION_CAPTCHA_REQUIRED}" />
                                     </div>
-                                    <div class="col-md-6" style="text-align: right;">
+                                    <div class="col-sm-6" style="text-align: left;">
                                         <img src="#{request.contextPath}/captcha.jpg" />
                                     </div>
                                 </div>
@@ -59,7 +59,7 @@
                         </div>
                         <div class="LineSpace"></div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-sm-12">
                                 <h:commandButton value="#{msg.PASSWORD_RESTORE_PAGE_RESTORE}" 
                                                  action="#{passwordForgotPageBean.sendRestoreLink()}" 
                                                  class="btn btn-default" />
